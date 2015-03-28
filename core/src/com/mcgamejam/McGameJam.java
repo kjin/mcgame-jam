@@ -8,20 +8,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class McGameJam extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	GameState gameState;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		gameState = new GameState();
 	}
 
 	@Override
 	public void render () {
+		gameState.update();
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, 0, 0);
+		gameState.render(batch);
 		batch.end();
 	}
 }
