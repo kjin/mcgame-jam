@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Robot implements PhysicalGameObject {
 	private Texture robotTexture;
 	private Vector2 position;
+	//private Vector2 size; // temp - we'll remove this when we have the actual texture
 	
 	// Physics stuff
 	
