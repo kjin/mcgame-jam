@@ -12,7 +12,8 @@ public class GameState {
 	private LevelOne levelO;
 	
 	// Models
-	private Robot robot;
+	private SpikeRobot spikeBot;
+	private StaircaseRobot stairBot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
 	private Exit exit;
@@ -34,13 +35,13 @@ public class GameState {
 	{
 		// init things here
 		levelO = new LevelOne();
-		robot = levelO.getRobot();
+		stairBot = levelO.getStairRobot();
+		spikeBot = levelO.getSpikeRobot();
 		walls.addAll(levelO.getWalls());
 		obstacles.addAll(levelO.getObstacles());
 		exit = levelO.getExit();
 		
-		initializePhysics();
-		
+		initializePhysics();	
 	}
 	
 	void update()
@@ -49,7 +50,15 @@ public class GameState {
 		// This method is called every frame.
 		physicsWorld.step(DELTA_TIME, 10, 8);
 		
-		robot.update(this);
+		spikeBot.update(this);
+		if(stairBot.stairTimeStart == 0) {
+			stairBot.ability();
+			stairBot.stairTimeStart = gameTime;
+			stairBot.update(this);
+		}
+		else if((gameTime - stairBot.stairTimeStart) >= 3) {
+			stairBot.changeBack();
+		}
 		for (Wall wall : walls)
 		{
 			wall.update(this);
@@ -67,7 +76,14 @@ public class GameState {
 	{
 		// Put your rendering logic here.
 		// This method is called every frame.
-		robot.render(batch);
+		spikeBot.render(batch);
+		if(stairBot.isStairs) {
+			stairBot.render(batch, stairBot.stairTexture);
+		}
+		else {
+			stairBot.render(batch);
+		}
+
 		for(Wall wall: walls) {
 			wall.render(batch);
 		}
@@ -86,7 +102,7 @@ public class GameState {
 	{
 		Box2D.init();
 		physicsWorld = new World(GRAVITY_VECTOR, false);
-		robot.initializePhysics(physicsWorld);
+		spikeBot.initializePhysics(physicsWorld);
 		for (Wall wall : walls)
 		{
 			wall.initializePhysics(physicsWorld);

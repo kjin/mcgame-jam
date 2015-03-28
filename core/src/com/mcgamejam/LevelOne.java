@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import com.badlogic.gdx.math.Vector2;
 
 public class LevelOne {
-	private Robot robot;
+	private StaircaseRobot stairbot;
+	private SpikeRobot spikebot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
 	private Exit exit;
 	
 	public LevelOne() {
-		robot = new Robot(300, 200);
+		stairbot = new StaircaseRobot(400, 400, true);
+		spikebot = new SpikeRobot(100, 150, true);
 		
 		Wall tester = new Wall("badlogic.jpg", new Vector2(0, 10), 5, 650);
 		Wall tester2 = new Wall("badlogic.jpg", new Vector2(500, 100), 5, 20);
@@ -25,8 +27,12 @@ public class LevelOne {
 		exit = new Exit("badlogic.jpg", new Vector2(10, 15), 30, 30);
 	}
 	
-	public Robot getRobot() {
-		return robot;
+	public StaircaseRobot getStairRobot() {
+		return stairbot;
+	}
+	
+	public SpikeRobot getSpikeRobot() {
+		return spikebot;
 	}
 	
 	public ArrayList<Wall> getWalls() {
