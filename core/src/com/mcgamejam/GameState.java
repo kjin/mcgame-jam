@@ -32,10 +32,10 @@ public class GameState {
 	{
 		// init things here
 		levelO = new LevelOne();
-		robot = levelO.robot;
-		walls.addAll(levelO.walls);
-		obstacles.addAll(levelO.obstacles);
-		exit = levelO.exit;
+		robot = levelO.getRobot();
+		walls.addAll(levelO.getWalls());
+		obstacles.addAll(levelO.getObstacles());
+		exit = levelO.getExit();
 		
 		initializePhysics();
 		
@@ -91,6 +91,6 @@ public class GameState {
 		{
 			obstacle.initializePhysics(physicsWorld);
 		}
-		exit = levelO.exit;
+		exit.initializePhysics(physicsWorld);
 	}
 }

@@ -2,14 +2,13 @@ package com.mcgamejam;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class LevelOne {
-	Robot robot;
-	ArrayList<Wall> walls = new ArrayList<Wall>();
-	ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-	Exit exit;
+	private Robot robot;
+	private ArrayList<Wall> walls = new ArrayList<Wall>();
+	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+	private Exit exit;
 	
 	public LevelOne() {
 		robot = new Robot(300, 200);
@@ -25,4 +24,21 @@ public class LevelOne {
 
 		exit = new Exit("badlogic.jpg", new Vector2(10, 15), 30, 30);
 	}
+	
+	public Robot getRobot() {
+		return robot;
+	}
+	
+	public ArrayList<Wall> getWalls() {
+		return walls;
+	}
+	
+	public ArrayList<Obstacle> getObstacles() {
+		return obstacles;
+	}
+	
+	public Exit getExit() {
+		return exit;
+	}
+
 }
