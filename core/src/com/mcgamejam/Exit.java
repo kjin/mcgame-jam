@@ -1,20 +1,16 @@
 package com.mcgamejam;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Exit {
-	private Texture robotTexture;
-	private Vector2 position;
+public class Exit extends Wall{
+	final boolean isExit = true;
 	
-	public Exit(String texture, Vector2 pos) {
-		robotTexture = new Texture(texture);
-		position = pos;
+	public Exit(String texture, Vector2 pos, int height, int width) {
+		super(texture, pos, height, width);
 	}
 	
-	void render(SpriteBatch batch) {
-		batch.draw(robotTexture, position.x, position.y);
+	@Override
+	public boolean isExit() {
+		return isExit;
 	}
-
 }

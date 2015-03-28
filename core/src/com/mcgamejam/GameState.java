@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameState {
 	private Robot robot;
+	private LevelOne levelO;
 	private float gameTime;
 	
 	final static float DELTA_TIME = 1.0f/60.0f; //assuming 60FPS
@@ -12,6 +13,8 @@ public class GameState {
 	{
 		// init things here
 		robot = new Robot();
+		levelO = new LevelOne();
+		
 	}
 	
 	void update()
@@ -25,6 +28,7 @@ public class GameState {
 	{
 		// put your rendering logic here
 		robot.render(batch);
+		levelO.render(batch);
 	}
 	
 	float getGameTime()
