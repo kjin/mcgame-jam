@@ -50,8 +50,7 @@ public class Wall implements PhysicalGameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
-		// TODO Auto-generated method stub
-		
+		batch.draw(wallTexture, position.x, position.y, width, height);
 	}
 	
 	public float getX() {

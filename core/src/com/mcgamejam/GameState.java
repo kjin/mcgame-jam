@@ -45,9 +45,10 @@ public class GameState {
 	
 	void update()
 	{
+		// Put your update logic here.
+		// This method is called every frame.
 		physicsWorld.step(DELTA_TIME, 10, 8);
 		
-		// put your update logic here, even if it doesn't do anything
 		robot.update(this);
 		for (Wall wall : walls)
 		{
@@ -64,13 +65,14 @@ public class GameState {
 	
 	void render(SpriteBatch batch)
 	{
-		// put your rendering logic here
+		// Put your rendering logic here.
+		// This method is called every frame.
 		robot.render(batch);
-		for(Wall w: walls) {
-			batch.draw(w.getTexture(), w.getX(), w.getY(), w.getWidth(), w.getHeight());
+		for(Wall wall: walls) {
+			wall.render(batch);
 		}
-		for(Obstacle o: obstacles) {
-			batch.draw(o.getTexture(), o.getX(), o.getY(), o.getWidth(), o.getHeight());
+		for(Obstacle obstacle: obstacles) {
+			obstacle.render(batch);
 		}
 		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
 	}
