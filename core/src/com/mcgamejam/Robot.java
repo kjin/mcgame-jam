@@ -10,9 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Robot implements PhysicalGameObject {
 	private Texture robotTexture;
 	private Vector2 position;
-	//private Vector2 size; // temp - we'll remove this when we have the actual texture
-	
-	// Physics stuff
+	private Vector2 size = new Vector2(10, 20); // temp - we'll remove this when we have the actual texture
 	
 	// Body that you can apply forces to and whatnot
 	private Body body;
@@ -39,9 +37,9 @@ public class Robot implements PhysicalGameObject {
 		FixtureDef fixtureDef = new FixtureDef();
 		Vector2[] vertices = new Vector2[4];
 		vertices[0] = new Vector2(0, 0);
-		vertices[1] = new Vector2(robotTexture.getWidth() * GameState.PHYSICS_SCALE, 0);
-		vertices[2] = new Vector2(robotTexture.getWidth() * GameState.PHYSICS_SCALE, robotTexture.getHeight() * GameState.PHYSICS_SCALE);
-		vertices[3] = new Vector2(0, robotTexture.getHeight() * GameState.PHYSICS_SCALE);
+		vertices[1] = new Vector2(size.x * GameState.PHYSICS_SCALE, 0);
+		vertices[2] = new Vector2(size.x * GameState.PHYSICS_SCALE, size.y * GameState.PHYSICS_SCALE);
+		vertices[3] = new Vector2(0, size.y * GameState.PHYSICS_SCALE);
 		PolygonShape shape = new PolygonShape();
 		shape.set(vertices);
 		fixtureDef.shape = shape;
@@ -56,6 +54,6 @@ public class Robot implements PhysicalGameObject {
 	
 	public void render(SpriteBatch batch)
 	{
-		batch.draw(robotTexture, position.x, position.y);
+		batch.draw(robotTexture, position.x, position.y, size.x, size.y);
 	}
 }

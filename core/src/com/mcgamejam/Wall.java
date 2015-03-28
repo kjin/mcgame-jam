@@ -3,7 +3,10 @@ package com.mcgamejam;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Wall implements PhysicalGameObject {
@@ -11,6 +14,9 @@ public class Wall implements PhysicalGameObject {
 	private Vector2 position;
 	private int height;
 	private int width;
+	
+	// Body that you can apply forces to and whatnot
+	private Body body;
 	
 	public Wall(String texture, Vector2 pos, int height, int width) {
 		wallTexture = new Texture(texture);
@@ -21,8 +27,20 @@ public class Wall implements PhysicalGameObject {
 
 	@Override
 	public void initializePhysics(World physicsWorld) {
-		// TODO Auto-generated method stub
-		
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(position);
+		bodyDef.position.scl(GameState.PHYSICS_SCALE);
+		body = physicsWorld.createBody(bodyDef);
+		FixtureDef fixtureDef = new FixtureDef();
+		Vector2[] vertices = new Vector2[4];
+		vertices[0] = new Vector2(0, 0);
+		vertices[1] = new Vector2(width * GameState.PHYSICS_SCALE, 0);
+		vertices[2] = new Vector2(width * GameState.PHYSICS_SCALE, height * GameState.PHYSICS_SCALE);
+		vertices[3] = new Vector2(0, height * GameState.PHYSICS_SCALE);
+		PolygonShape shape = new PolygonShape();
+		shape.set(vertices);
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef);
 	}
 
 	@Override
