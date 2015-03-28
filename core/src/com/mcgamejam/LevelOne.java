@@ -23,14 +23,16 @@ public class LevelOne {
 		walls.add(tester4);
 	}	
 	
-	void render(SpriteBatch batch)
-	{
-		for(Wall w: walls) {
-			batch.draw(w.getTexture(), w.getX(), w.getY(), w.getWidth(), w.getHeight());
-		}
-		for(Obstacle o: obstacles) {
-			batch.draw(o.getTexture(), o.getX(), o.getY(), o.getWidth(), o.getHeight());
-		}
-		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
+	public ArrayList<Wall> getWalls() {
+		return walls;
 	}
+	
+	public ArrayList<Obstacle> getObstacles() {
+		return obstacles;
+	}
+	
+	public Exit getExit() {
+		return exit;
+	}
+
 }
