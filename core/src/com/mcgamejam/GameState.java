@@ -26,6 +26,8 @@ public class GameState {
 	final static float DELTA_TIME = 1.0f/60.0f; //assuming 60FPS
 	final static Vector2 GRAVITY_VECTOR = new Vector2(0.0f, -10.0f);
 	
+	// We need this because the scale is too large for the physics world otherwise.
+	// See usage in Robot.java
 	public final static float PHYSICS_SCALE = 1.0f/40.0f;
 	
 	GameState()
