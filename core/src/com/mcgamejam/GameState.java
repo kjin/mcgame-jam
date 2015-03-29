@@ -57,7 +57,7 @@ public class GameState {
 			stairBot.stairTimeStart = gameTime;
 			stairBot.inLight = false;
 		}
-		else if((gameTime - stairBot.stairTimeStart) >= 3 && stairBot.isStairs) {
+		else if((gameTime - stairBot.stairTimeStart) >= 180 && stairBot.isStairs) {
 			stairBot.changeBack();
 		}
 		stairBot.update(this);
@@ -73,9 +73,32 @@ public class GameState {
 		}
 		exit.update(this);
 		
+		//check for collision
 		
 		
 		gameTime += DELTA_TIME;
+	}
+	
+	void changeLevels(int level) {
+		if(level == 1) {
+			LevelTwo level2 = new LevelTwo();
+			stairBot = level2.getStairRobot();
+			spikeBot = level2.getSpikeRobot();
+			walls.addAll(level2.getWalls());
+			obstacles.addAll(level2.getObstacles());
+			exit = level2.getExit();
+		}
+		else {
+			LevelThree level3 = new LevelThree();
+			stairBot = level3.getStairRobot();
+			spikeBot = level3.getSpikeRobot();
+			walls.addAll(level3.getWalls());
+			obstacles.addAll(level3.getObstacles());
+			exit = level3.getExit();
+		}
+
+		
+		initializePhysics();
 	}
 	
 	void render(SpriteBatch batch)

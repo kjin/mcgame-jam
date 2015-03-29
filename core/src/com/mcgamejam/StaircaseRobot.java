@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public class StaircaseRobot extends Robot{
 	protected Vector2 dy, dx;
 	protected boolean facingRight, isStairs, inLight;
-	protected Texture stairTexture;
+	protected Texture stairTexture, robotTexture;
 	protected Fixture stairFixture;
 	protected float stairTimeStart;
 	
@@ -41,6 +41,7 @@ public class StaircaseRobot extends Robot{
 			dy = new Vector2(x, 720);
 		}
 		
+		robotTexture = new Texture("electrician.png");
 		stairTexture = new Texture("badlogic.jpg");
 		stairTimeStart = 0;
 		facingRight = faceRight;
