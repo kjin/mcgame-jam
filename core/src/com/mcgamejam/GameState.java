@@ -59,14 +59,6 @@ public class GameState {
 		
 		spikeBot.update(this);
 		//update the stairBot
-		if(stairBot.stairTimeStart == 0 && stairBot.inLight) {
-			stairBot.ability();
-			stairBot.stairTimeStart = gameTime;
-			stairBot.inLight = false;
-		}
-		else if((gameTime - stairBot.stairTimeStart) >= 180 && stairBot.isStairs) {
-			stairBot.changeBack();
-		}
 		stairBot.update(this);
 		
 		//update environment
@@ -130,12 +122,7 @@ public class GameState {
 			obstacle.render(batch);
 		}
 		spikeBot.render(batch);
-		if(stairBot.isStairs) {
-			stairBot.render(batch, stairBot.stairTexture);
-		}
-		else {
-			stairBot.render(batch);
-		}
+		stairBot.render(batch);
 		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
 	}
 	
@@ -147,6 +134,11 @@ public class GameState {
 	public ArrayList<Wall> getWalls()
 	{
 		return walls;
+	}
+	
+	public ArrayList<Light> getLight()
+	{
+		return lights;
 	}
 	
 	private void initializePhysics()

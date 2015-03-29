@@ -117,7 +117,7 @@ public class Light implements PhysicalGameObject {
 		return Math.abs(result);
 	}
 
-	void castRays(Vector2 source)
+	private void castRays(Vector2 source)
 	{
 		// smooth transition
 		rp.lerp(source, 0.5f);
@@ -174,7 +174,6 @@ public class Light implements PhysicalGameObject {
 		{
 			Vector3 v1 = vertexArray.get(h);
 			Vector3 v2 = vertexArray.get(i);
-			shape.triangle(rp.x, rp.y, v1.x, v1.y, v2.x, v2.y);
 			if (triangleContains(rp, v1, v2, point))
 			{
 				return true;
@@ -194,9 +193,9 @@ public class Light implements PhysicalGameObject {
 		// update position
 		if (Gdx.input.justTouched())
 		{
-			position.set(Gdx.input.getX(), 480 - Gdx.input.getY());
+			position.set(Gdx.input.getX(), 720 - Gdx.input.getY());
 		}
-		direction.set(Gdx.input.getX() - position.x, 480 - Gdx.input.getY() - position.y);
+		direction.set(Gdx.input.getX() - position.x, 720 - Gdx.input.getY() - position.y);
 		angle = (float)Math.atan2(direction.y, direction.x);
 		
 		ArrayList<Wall> walls = gameState.getWalls();

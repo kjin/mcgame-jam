@@ -13,6 +13,7 @@ public class McGameJam extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		Gdx.graphics.setDisplayMode(1280, 720, false);
 		batch = new SpriteBatch();
 		gameState = new GameState(new Vector2(640, 480));
 	}

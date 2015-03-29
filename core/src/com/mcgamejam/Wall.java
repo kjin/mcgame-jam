@@ -2,15 +2,19 @@ package com.mcgamejam;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 
 public class Wall implements PhysicalGameObject {
 	private Texture wallTexture;
+	private TextureRegion wallTextureRegion;
+	private TiledDrawable wallTiledDrawable;
 	private Vector2 position;
 	private int height;
 	private int width;
@@ -22,6 +26,8 @@ public class Wall implements PhysicalGameObject {
 		if (texture != null)
 		{
 			wallTexture = new Texture(texture);
+			wallTextureRegion = new TextureRegion(wallTexture);
+			wallTiledDrawable = new TiledDrawable(wallTextureRegion);
 		}
 		position = pos;
 		this.height = height;
@@ -55,7 +61,7 @@ public class Wall implements PhysicalGameObject {
 	public void render(SpriteBatch batch) {
 		if (wallTexture != null)
 		{
-			batch.draw(wallTexture, position.x, position.y, width, height);
+			wallTiledDrawable.draw(batch, position.x, position.y, width, wallTexture.getHeight());
 		}
 	}
 	
