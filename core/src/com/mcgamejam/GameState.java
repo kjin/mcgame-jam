@@ -2,6 +2,7 @@ package com.mcgamejam;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class GameState {
 	private Vector2 dimensions;
+	private int levelNum;
 	
 	// Models
 	private SpikeRobot spikeBot;
@@ -17,6 +19,9 @@ public class GameState {
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
 	private ArrayList<Light> lights = new ArrayList<Light>();
 	private Exit exit;
+	
+	// Backgrounds
+	private Texture[] backgrounds;
 	
 	// Box2D world
 	private World physicsWorld;
@@ -34,16 +39,23 @@ public class GameState {
 	GameState(Vector2 dimensions)
 	{
 		this.dimensions = dimensions;
-		initLevel(1);
+		backgrounds = new Texture[3];
+		for (int i = 0; i < 3; i++)
+		{
+			backgrounds[i] = new Texture("background" + (i + 1) + ".png");
+		}
+		
+		initLevel(0);
 	}
 	
 	void initLevel(int levelNum) {
+		this.levelNum = levelNum;
 		Level level;
-		if (levelNum == 2)
+		if (levelNum == 1)
 		{
 			level = new LevelTwo();
 		}
-		else if (levelNum == 3)
+		else if (levelNum == 2)
 		{
 			level = new LevelThree();
 		}
@@ -115,7 +127,9 @@ public class GameState {
 	
 	void render(SpriteBatch batch)
 	{
-		// Put your rendering logic here.
+		// Draw background.
+		batch.draw(backgrounds[levelNum], 0, 0);
+		
 		// This method is called every frame.
 		for(Wall wall: walls) {
 			wall.render(batch);
