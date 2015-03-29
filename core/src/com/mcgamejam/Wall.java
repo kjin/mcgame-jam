@@ -19,7 +19,10 @@ public class Wall implements PhysicalGameObject {
 	private Body body;
 	
 	public Wall(String texture, Vector2 pos, int height, int width) {
-		wallTexture = new Texture(texture);
+		if (texture != null)
+		{
+			wallTexture = new Texture(texture);
+		}
 		position = pos;
 		this.height = height;
 		this.width = width;
@@ -50,7 +53,10 @@ public class Wall implements PhysicalGameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
-		batch.draw(wallTexture, position.x, position.y, width, height);
+		if (wallTexture != null)
+		{
+			batch.draw(wallTexture, position.x, position.y, width, height);
+		}
 	}
 	
 	public float getX() {

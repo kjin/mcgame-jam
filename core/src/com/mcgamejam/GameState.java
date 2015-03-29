@@ -15,6 +15,7 @@ public class GameState {
 	private Robot robot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+	private ArrayList<Light> lights = new ArrayList<Light>();
 	private Exit exit;
 	
 	// Box2D world
@@ -30,13 +31,19 @@ public class GameState {
 	// See usage in Robot.java
 	public final static float PHYSICS_SCALE = 1.0f/40.0f;
 	
-	GameState()
+	GameState(Vector2 dimensions)
 	{
 		// init things here
 		levelO = new LevelOne();
 		robot = levelO.getRobot();
 		walls.addAll(levelO.getWalls());
+		// add walls on all sides
+		walls.add(new Wall(null, new Vector2(-10, 0), 10, (int)dimensions.y));
+		walls.add(new Wall(null, new Vector2(dimensions.x, 0), 10, (int)dimensions.y));
+		walls.add(new Wall(null, new Vector2(0, -10), (int)dimensions.x, 10));
+		walls.add(new Wall(null, new Vector2(0, dimensions.y), (int)dimensions.x, 10));
 		obstacles.addAll(levelO.getObstacles());
+		lights.addAll(levelO.getLights());
 		exit = levelO.getExit();
 		
 		initializePhysics();
@@ -58,6 +65,10 @@ public class GameState {
 		{
 			obstacle.update(this);
 		}
+		for (Light light : lights)
+		{
+			light.update(this);
+		}
 		exit.update(this);
 		
 		gameTime += DELTA_TIME;
@@ -67,19 +78,30 @@ public class GameState {
 	{
 		// Put your rendering logic here.
 		// This method is called every frame.
-		robot.render(batch);
-		for(Wall wall: walls) {
+		for(Wall wall: walls)
+		{
 			wall.render(batch);
 		}
-		for(Obstacle obstacle: obstacles) {
+		for(Obstacle obstacle: obstacles)
+		{
 			obstacle.render(batch);
 		}
+		for (Light light : lights)
+		{
+			light.render(batch);
+		}
+		robot.render(batch);
 		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
 	}
 	
 	float getGameTime()
 	{
 		return gameTime;
+	}
+	
+	public ArrayList<Wall> getWalls()
+	{
+		return walls;
 	}
 	
 	private void initializePhysics()
@@ -94,6 +116,10 @@ public class GameState {
 		for (Obstacle obstacle : obstacles)
 		{
 			obstacle.initializePhysics(physicsWorld);
+		}
+		for (Light light : lights)
+		{
+			light.initializePhysics(physicsWorld);
 		}
 		exit.initializePhysics(physicsWorld);
 	}

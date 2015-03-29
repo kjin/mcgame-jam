@@ -8,6 +8,7 @@ public class LevelOne {
 	private Robot robot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+	private ArrayList<Light> lights = new ArrayList<Light>();
 	private Exit exit;
 	
 	public LevelOne() {
@@ -21,6 +22,8 @@ public class LevelOne {
 		walls.add(tester2);
 		walls.add(tester3);
 		walls.add(tester4);
+		
+		lights.add(new Light());
 
 		exit = new Exit("badlogic.jpg", new Vector2(10, 15), 30, 30);
 	}
@@ -35,6 +38,10 @@ public class LevelOne {
 	
 	public ArrayList<Obstacle> getObstacles() {
 		return obstacles;
+	}
+	
+	public ArrayList<Light> getLights() {
+		return lights;
 	}
 	
 	public Exit getExit() {
