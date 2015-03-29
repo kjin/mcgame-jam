@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class McGameJam extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -12,8 +13,9 @@ public class McGameJam extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		Gdx.graphics.setDisplayMode(1280, 720, false);
 		batch = new SpriteBatch();
-		gameState = new GameState();
+		gameState = new GameState(new Vector2(640, 480));
 	}
 
 	@Override

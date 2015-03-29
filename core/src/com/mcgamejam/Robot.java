@@ -1,23 +1,24 @@
 package com.mcgamejam;
 
 import java.awt.geom.RectangularShape;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Robot implements PhysicalGameObject {
+public abstract class Robot implements PhysicalGameObject {
 	protected Texture robotTexture;
 	protected Vector2 position;
-	protected Vector2 size = new Vector2(10, 20); // temp - we'll remove this when we have the actual texture
+	protected Vector2 size = new Vector2(100, 100); // temp - we'll remove this when we have the actual texture
+	protected boolean inLight = false;
 	
 	// Body that you can apply forces to and whatnot
 	protected Body body;
 	
 	protected Robot(Vector2 pos)
 	{
-		robotTexture = new Texture("electrician.png");
 		position = new Vector2();
 		position.set(pos);
 	}
@@ -50,15 +51,12 @@ public class Robot implements PhysicalGameObject {
 	{
 		position.set(body.getPosition());
 		position.scl(1.0f / GameState.PHYSICS_SCALE);
+		ArrayList<Light> lights = gameState.getLight();
+		for (Light l : lights)
+		{
+			inLight = l.contains(new Vector2(0.5f * size.x + position.x, 0.5f * size.y + position.y));
+		}
 	}
 	
-	public void render(SpriteBatch batch)
-	{
-		batch.draw(robotTexture, position.x, position.y, size.x, size.y);
-	}
-	
-	public void render(SpriteBatch batch, Texture rTexture)
-	{
-		batch.draw(rTexture, position.x, position.y, size.x, size.y);
-	}
+	public abstract void render(SpriteBatch batch);
 }

@@ -1,6 +1,7 @@
 package com.mcgamejam;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -8,8 +9,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class StaircaseRobot extends Robot{
 	protected Vector2 dy, dx;
-	protected boolean facingRight, isStairs, inLight;
-	protected Texture stairTexture, robotTexture;
+	protected boolean facingRight, isStairs;
+	protected Texture stairTexture;
 	protected Fixture stairFixture;
 	protected float stairTimeStart;
 	
@@ -41,11 +42,24 @@ public class StaircaseRobot extends Robot{
 			dy = new Vector2(x, 720);
 		}
 		
-		robotTexture = new Texture("electrician.png");
+		robotTexture = new Texture("treadmill.png");
 		stairTexture = new Texture("badlogic.jpg");
 		stairTimeStart = 0;
 		facingRight = faceRight;
 		inLight = false;
+	}
+	
+	@Override
+	public void update(GameState gameState) {
+		if(stairTimeStart == 0 && inLight) {
+			ability();
+			stairTimeStart = gameState.getGameTime();
+			inLight = false;
+		}
+		else if((gameState.getGameTime() - stairTimeStart) >= 180 && isStairs) {
+			changeBack();
+		}
+		super.update(gameState);
 	}
 
 	public void ability() {
@@ -86,6 +100,18 @@ public class StaircaseRobot extends Robot{
 				dx = new Vector2(1280, position.y);
 			}
 			facingRight = true;
+		}
+	}
+
+	@Override
+	public void render(SpriteBatch batch) {
+		if (isStairs)
+		{
+			batch.draw(stairTexture, position.x, position.y, size.x, size.y);
+		}
+		else
+		{
+			batch.draw(robotTexture, position.x, position.y, size.x, size.y);
 		}
 	}
 }

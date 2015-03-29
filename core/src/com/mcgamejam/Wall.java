@@ -2,24 +2,33 @@ package com.mcgamejam;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 
 public class Wall implements PhysicalGameObject {
 	private Texture wallTexture;
+	private TextureRegion wallTextureRegion;
+	private TiledDrawable wallTiledDrawable;
 	private Vector2 position;
 	private int height;
 	private int width;
 	
 	// Body that you can apply forces to and whatnot
-	private Body body;
+	protected Body body;
 	
 	public Wall(String texture, Vector2 pos, int height, int width) {
-		wallTexture = new Texture(texture);
+		if (texture != null)
+		{
+			wallTexture = new Texture(texture);
+			wallTextureRegion = new TextureRegion(wallTexture);
+			wallTiledDrawable = new TiledDrawable(wallTextureRegion);
+		}
 		position = pos;
 		this.height = height;
 		this.width = width;
@@ -50,7 +59,10 @@ public class Wall implements PhysicalGameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
-		batch.draw(wallTexture, position.x, position.y, width, height);
+		if (wallTexture != null)
+		{
+			wallTiledDrawable.draw(batch, position.x, position.y, width, wallTexture.getHeight());
+		}
 	}
 	
 	public float getX() {

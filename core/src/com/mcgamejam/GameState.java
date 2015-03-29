@@ -16,6 +16,7 @@ public class GameState {
 	private StaircaseRobot stairBot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+	private ArrayList<Light> lights = new ArrayList<Light>();
 	private Exit exit;
 	
 	// Box2D world
@@ -31,14 +32,20 @@ public class GameState {
 	// See usage in Robot.java
 	public final static float PHYSICS_SCALE = 1.0f/40.0f;
 	
-	GameState()
+	GameState(Vector2 dimensions)
 	{
 		// init things here
 		levelO = new LevelOne();
 		stairBot = levelO.getStairRobot();
 		spikeBot = levelO.getSpikeRobot();
 		walls.addAll(levelO.getWalls());
+		// add walls on all sides
+		walls.add(new Wall(null, new Vector2(-10, 0), 10, (int)dimensions.y));
+		walls.add(new Wall(null, new Vector2(dimensions.x, 0), 10, (int)dimensions.y));
+		walls.add(new Wall(null, new Vector2(0, -10), (int)dimensions.x, 10));
+		walls.add(new Wall(null, new Vector2(0, dimensions.y), (int)dimensions.x, 10));
 		obstacles.addAll(levelO.getObstacles());
+		lights.addAll(levelO.getLights());
 		exit = levelO.getExit();
 		
 		initializePhysics();	
@@ -52,14 +59,6 @@ public class GameState {
 		
 		spikeBot.update(this);
 		//update the stairBot
-		if(stairBot.stairTimeStart == 0 && stairBot.inLight) {
-			stairBot.ability();
-			stairBot.stairTimeStart = gameTime;
-			stairBot.inLight = false;
-		}
-		else if((gameTime - stairBot.stairTimeStart) >= 180 && stairBot.isStairs) {
-			stairBot.changeBack();
-		}
 		stairBot.update(this);
 		
 		//update environment
@@ -70,6 +69,10 @@ public class GameState {
 		for (Obstacle obstacle : obstacles)
 		{
 			obstacle.update(this);
+		}
+		for (Light light : lights)
+		{
+			light.update(this);
 		}
 		exit.update(this);
 		
@@ -105,26 +108,37 @@ public class GameState {
 	{
 		// Put your rendering logic here.
 		// This method is called every frame.
-		spikeBot.render(batch);
-		if(stairBot.isStairs) {
-			stairBot.render(batch, stairBot.stairTexture);
+		batch.end();
+		for (Light light : lights)
+		{
+			light.render(batch);
 		}
-		else {
-			stairBot.render(batch);
-		}
-
+		batch.begin();
 		for(Wall wall: walls) {
 			wall.render(batch);
 		}
-		for(Obstacle obstacle: obstacles) {
+		for(Obstacle obstacle: obstacles)
+		{
 			obstacle.render(batch);
 		}
+		spikeBot.render(batch);
+		stairBot.render(batch);
 		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
 	}
 	
 	float getGameTime()
 	{
 		return gameTime;
+	}
+	
+	public ArrayList<Wall> getWalls()
+	{
+		return walls;
+	}
+	
+	public ArrayList<Light> getLight()
+	{
+		return lights;
 	}
 	
 	private void initializePhysics()
@@ -140,6 +154,10 @@ public class GameState {
 		for (Obstacle obstacle : obstacles)
 		{
 			obstacle.initializePhysics(physicsWorld);
+		}
+		for (Light light : lights)
+		{
+			light.initializePhysics(physicsWorld);
 		}
 		exit.initializePhysics(physicsWorld);
 	}
