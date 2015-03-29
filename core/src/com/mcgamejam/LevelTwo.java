@@ -1,17 +1,8 @@
 package com.mcgamejam;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.badlogic.gdx.math.Vector2;
 
-public class LevelTwo {
-	private StaircaseRobot stairbot;
-	private SpikeRobot spikebot;
-	private ArrayList<Wall> walls = new ArrayList<Wall>();
-	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-	private Exit exit;
-	
+public class LevelTwo extends Level {
 	public LevelTwo() {
 		stairbot = new StaircaseRobot(400, 400, true);
 		spikebot = new SpikeRobot(100, 150, true);
@@ -29,30 +20,5 @@ public class LevelTwo {
 		obstacles.add(test);
 
 		exit = new Exit("badlogic.jpg", new Vector2(10, 15), 30, 30);
-	}
-
-	public StaircaseRobot getStairRobot() {
-		// TODO Auto-generated method stub
-		return stairbot;
-	}
-
-	public SpikeRobot getSpikeRobot() {
-		// TODO Auto-generated method stub
-		return spikebot;
-	}
-
-	public ArrayList<Wall> getWalls() {
-		// TODO Auto-generated method stub
-		return walls;
-	}
-
-	public ArrayList<Obstacle> getObstacles() {
-		// TODO Auto-generated method stub
-		return obstacles;
-	}
-
-	public Exit getExit() {
-		// TODO Auto-generated method stub
-		return exit;
 	}
 }
