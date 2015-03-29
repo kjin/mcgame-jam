@@ -4,15 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Light implements PhysicalGameObject {
+	private Texture texture;
+	private TextureRegion textureRegion;
+	private Affine2 transform = new Affine2();
+	
 	private Vector2 position = new Vector2();
 	private Vector2 direction = new Vector2();
 	private float angle = 0;
@@ -32,6 +39,10 @@ public class Light implements PhysicalGameObject {
 	private static CompareZ compareZ = new CompareZ();
 	
 	Light() {
+		texture = new Texture("light.png");
+		textureRegion = new TextureRegion(texture);
+		textureRegion.setRegion(64, 0, 64, 96);
+		
 		vertexArray.add(new Vector3());
 		vertexArray.add(new Vector3());
 	}
@@ -224,17 +235,17 @@ public class Light implements PhysicalGameObject {
 		int h = vertexArray.size() - 1;
 		for (int i = 0; i < vertexArray.size(); i++)
 		{
-			shape.setColor(1, 0.8f, 0.2f, 0.5f);
+			shape.setColor(1f, 1f, 1f, 0.5f);
 			Vector3 v1 = vertexArray.get(h);
 			Vector3 v2 = vertexArray.get(i);
 			shape.triangle(rp.x, rp.y, v1.x, v1.y, v2.x, v2.y);
 			//shape.line(rp.x, rp.y, v1.x, v1.y);
-			shape.setColor(0, 1, 1, 1);
-			shape.circle(rp.x, rp.y, 20);
 			h = i;
 		}
 		shape.end();
+		transform.setToRotationRad(angle);
 		batch.begin();
+		batch.draw(textureRegion, rp.x - 32, rp.y - 64, 32, 64, 64, 96, 1, 1, (float)Math.toDegrees(angle) + 90);
 	}
 
 }
