@@ -8,14 +8,14 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class StaircaseRobot extends Robot{
 	protected Vector2 dy, dx;
-	protected boolean facingRight, isStairs;
+	protected boolean facingRight, isStairs, inLight;
 	protected Texture stairTexture;
 	protected Fixture stairFixture;
 	protected float stairTimeStart;
 	
 	protected StaircaseRobot(float x, float y, boolean faceRight) {
 		super(x, y);
-		facingRight = faceRight;
+
 		//right
 		if(facingRight) {
 			if((x + 150) < 1280) {
@@ -42,6 +42,9 @@ public class StaircaseRobot extends Robot{
 		}
 		
 		stairTexture = new Texture("badlogic.jpg");
+		stairTimeStart = 0;
+		facingRight = faceRight;
+		inLight = false;
 	}
 
 	public void ability() {
@@ -60,6 +63,7 @@ public class StaircaseRobot extends Robot{
 	public void changeBack() {
 		body.destroyFixture(stairFixture);
 		isStairs = false;
+		inLight = false;
 		stairTimeStart = 0;
 	}
 	

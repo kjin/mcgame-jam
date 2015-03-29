@@ -23,6 +23,9 @@ public class LevelOne {
 		walls.add(tester2);
 		walls.add(tester3);
 		walls.add(tester4);
+		
+		Obstacle test = new Obstacle("badlogic.jpg", new Vector2(45, 15), 10, 20);
+		obstacles.add(test);
 
 		exit = new Exit("badlogic.jpg", new Vector2(10, 15), 30, 30);
 	}

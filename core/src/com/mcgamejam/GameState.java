@@ -51,14 +51,18 @@ public class GameState {
 		physicsWorld.step(DELTA_TIME, 10, 8);
 		
 		spikeBot.update(this);
-		if(stairBot.stairTimeStart == 0) {
+		//update the stairBot
+		if(stairBot.stairTimeStart == 0 && stairBot.inLight) {
 			stairBot.ability();
 			stairBot.stairTimeStart = gameTime;
-			stairBot.update(this);
+			stairBot.inLight = false;
 		}
-		else if((gameTime - stairBot.stairTimeStart) >= 3) {
+		else if((gameTime - stairBot.stairTimeStart) >= 3 && stairBot.isStairs) {
 			stairBot.changeBack();
 		}
+		stairBot.update(this);
+		
+		//update environment
 		for (Wall wall : walls)
 		{
 			wall.update(this);
@@ -68,6 +72,8 @@ public class GameState {
 			obstacle.update(this);
 		}
 		exit.update(this);
+		
+		
 		
 		gameTime += DELTA_TIME;
 	}
@@ -103,6 +109,7 @@ public class GameState {
 		Box2D.init();
 		physicsWorld = new World(GRAVITY_VECTOR, false);
 		spikeBot.initializePhysics(physicsWorld);
+		stairBot.initializePhysics(physicsWorld);
 		for (Wall wall : walls)
 		{
 			wall.initializePhysics(physicsWorld);

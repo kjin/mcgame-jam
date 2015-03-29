@@ -17,7 +17,7 @@ public class Robot implements PhysicalGameObject {
 	
 	protected Robot(Vector2 pos)
 	{
-		robotTexture = new Texture("badlogic.jpg");
+		robotTexture = new Texture("electrician.png");
 		position = new Vector2();
 		position.set(pos);
 	}
