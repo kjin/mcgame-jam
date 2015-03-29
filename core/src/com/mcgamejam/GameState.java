@@ -12,12 +12,11 @@ public class GameState {
 	private Vector2 dimensions;
 	private int levelNum;
 	
-	// Models
-	private SpikeRobot spikeBot;
-	private StaircaseRobot stairBot;
-	private ArrayList<Wall> walls = new ArrayList<Wall>();
-	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-	private ArrayList<Light> lights = new ArrayList<Light>();
+	// Models to update
+	private ArrayList<PhysicalGameObject> nonSelectableModels = new ArrayList<PhysicalGameObject>();
+	private ArrayList<PhysicalGameObject> selectableModels = new ArrayList<PhysicalGameObject>();
+	
+	private ArrayList<Light> lightModels = new ArrayList<Light>();
 	private Exit exit;
 	
 	// Backgrounds
@@ -64,17 +63,22 @@ public class GameState {
 			level = new LevelOne();
 		}
 		// init things here
-		stairBot = level.getStairRobot();
-		spikeBot = level.getSpikeRobot();
-		walls.addAll(level.getWalls());
-		// add walls on all sides
-		walls.add(new Wall(null, new Vector2(-10, 0), 10, (int)dimensions.y));
-		walls.add(new Wall(null, new Vector2(dimensions.x, 0), 10, (int)dimensions.y));
-		walls.add(new Wall(null, new Vector2(0, -10), (int)dimensions.x, 10));
-		walls.add(new Wall(null, new Vector2(0, dimensions.y), (int)dimensions.x, 10));
-		obstacles.addAll(level.getObstacles());
-		lights.addAll(level.getLights());
-		exit = level.getExit();
+		selectableModels.clear();
+		selectableModels.add(level.getStairRobot());
+		selectableModels.add(level.getSpikeRobot());
+		selectableModels.addAll(level.getLights());
+		// just so we can keep track of them separately
+		lightModels.clear();
+		lightModels.addAll(level.getLights());
+		nonSelectableModels.clear();
+		nonSelectableModels.addAll(level.getWalls());
+		nonSelectableModels.addAll(level.getObstacles());
+		nonSelectableModels.add(level.getExit());
+		// the borders
+		nonSelectableModels.add(new Wall(null, new Vector2(-10, 0), 10, (int)dimensions.y));
+		nonSelectableModels.add(new Wall(null, new Vector2(dimensions.x, 0), 10, (int)dimensions.y));
+		nonSelectableModels.add(new Wall(null, new Vector2(0, -10), (int)dimensions.x, 10));
+		nonSelectableModels.add(new Wall(null, new Vector2(0, dimensions.y), (int)dimensions.x, 10));
 		initializePhysics();
 	}
 	
@@ -82,45 +86,28 @@ public class GameState {
 	{
 		Box2D.init();
 		physicsWorld = new World(GRAVITY_VECTOR, false);
-		spikeBot.initializePhysics(physicsWorld);
-		stairBot.initializePhysics(physicsWorld);
-		for (Wall wall : walls)
+		for (PhysicalGameObject model : selectableModels)
 		{
-			wall.initializePhysics(physicsWorld);
+			model.initializePhysics(physicsWorld);
 		}
-		for (Obstacle obstacle : obstacles)
+		for (PhysicalGameObject model : nonSelectableModels)
 		{
-			obstacle.initializePhysics(physicsWorld);
+			model.initializePhysics(physicsWorld);
 		}
-		for (Light light : lights)
-		{
-			light.initializePhysics(physicsWorld);
-		}
-		exit.initializePhysics(physicsWorld);
 	}
 	
 	void update()
 	{
 		physicsWorld.step(DELTA_TIME, 10, 8);
-		
-		spikeBot.update(this);
-		//update the stairBot
-		stairBot.update(this);
-		
-		//update environment
-		for (Wall wall : walls)
+
+		for (PhysicalGameObject model : selectableModels)
 		{
-			wall.update(this);
+			model.update(this);
 		}
-		for (Obstacle obstacle : obstacles)
+		for (PhysicalGameObject model : nonSelectableModels)
 		{
-			obstacle.update(this);
+			model.update(this);
 		}
-		for (Light light : lights)
-		{
-			light.update(this);
-		}
-		exit.update(this);
 		
 		gameTime += DELTA_TIME;
 	}
@@ -131,20 +118,15 @@ public class GameState {
 		batch.draw(backgrounds[levelNum], 0, 0);
 		
 		// This method is called every frame.
-		for(Wall wall: walls) {
-			wall.render(batch);
-		}
-		for(Obstacle obstacle: obstacles)
+
+		for (PhysicalGameObject model : nonSelectableModels)
 		{
-			obstacle.render(batch);
+			model.render(batch);
 		}
-		for (Light light : lights)
+		for (PhysicalGameObject model : selectableModels)
 		{
-			light.render(batch);
+			model.render(batch);
 		}
-		spikeBot.render(batch);
-		stairBot.render(batch);
-		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
 	}
 	
 	//Getters//
@@ -154,14 +136,19 @@ public class GameState {
 		return gameTime;
 	}
 	
-	public ArrayList<Wall> getWalls()
+	public ArrayList<PhysicalGameObject> getNonSelectablePhysicalGameObjects()
 	{
-		return walls;
+		return nonSelectableModels;
+	}
+	
+	public ArrayList<PhysicalGameObject> getSelectablePhysicalGameObjects()
+	{
+		return selectableModels;
 	}
 	
 	public ArrayList<Light> getLight()
 	{
-		return lights;
+		return lightModels;
 	}
 	
 	public Vector2 getDimensions()

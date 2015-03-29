@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Light implements PhysicalGameObject {
+public class Light extends PhysicalGameObject {
 	private Texture texture;
 	private TextureRegion textureRegion;
 	private Affine2 transform = new Affine2();
@@ -24,6 +25,7 @@ public class Light implements PhysicalGameObject {
 	private Vector2 direction = new Vector2();
 	private float angle = 0;
 	
+	private static final float LIGHT_RANGE = 300;
 	private static final float FIELD_OF_VIEW = 0.35f; 
 	private static final float PARALLEL_EPSILON = 0.00001f;
 	private static final float FLT_EPSILON = 0.00001f;
@@ -90,7 +92,7 @@ public class Light implements PhysicalGameObject {
 		else
 		{
 			rd.nor();
-			t1Min = 1000;
+			t1Min = LIGHT_RANGE;
 			for (i = 0; i < occlusionPolygons.size(); i++)
 			{
 				Vector2[] currentPolygon = occlusionPolygons.get(i);
@@ -209,11 +211,11 @@ public class Light implements PhysicalGameObject {
 		direction.set(Gdx.input.getX() - position.x, gameState.getDimensions().y - Gdx.input.getY() - position.y);
 		angle = (float)Math.atan2(direction.y, direction.x);
 		
-		ArrayList<Wall> walls = gameState.getWalls();
+		ArrayList<PhysicalGameObject> walls = gameState.getNonSelectablePhysicalGameObjects();
 		while (occlusionPolygons.size() < walls.size())
 		{
 			int i = occlusionPolygons.size();
-			Wall wall = walls.get(i);
+			Wall wall = (Wall)walls.get(i); // bad code, but no time to fix atm
 			Vector2[] vertices = new Vector2[4];
 			vertices[0] = new Vector2(wall.getX(), wall.getY());
 			vertices[1] = new Vector2(wall.getX() + wall.getWidth(), wall.getY());
@@ -227,22 +229,53 @@ public class Light implements PhysicalGameObject {
 		}
 		castRays(position);
 	}
+	
+	// helpers
+	private Vector2 h1 = new Vector2();
+	private Vector2 h2 = new Vector2();
 
 	@Override
 	public void render(SpriteBatch batch) {
 		batch.end();
+		Gdx.gl.glEnable(GL30.GL_BLEND);
+	    Gdx.gl.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
 		shape.begin(ShapeType.Filled);
 		int h = vertexArray.size() - 1;
 		for (int i = 0; i < vertexArray.size(); i++)
 		{
-			shape.setColor(1f, 1f, 1f, 0.5f);
+			shape.setColor(1f, 1f, 1f, 0.1f);
 			Vector3 v1 = vertexArray.get(h);
 			Vector3 v2 = vertexArray.get(i);
-			shape.triangle(rp.x, rp.y, v1.x, v1.y, v2.x, v2.y);
+			h1.set(v1.x, v1.y);
+			h2.set(v2.x, v2.y);
+			float dist = LIGHT_RANGE;
+			if (rp.dst2(h1) > COINCIDENT_EPSILON && rp.dst2(h2) > COINCIDENT_EPSILON)
+			{
+				for (int j = 0; j < 10; j++)
+				{
+					if (rp.dst2(h1) > dist * dist)
+					{
+						h1.sub(rp);
+						h1.nor();
+						h1.scl(dist);
+						h1.add(rp);
+					}
+					if (rp.dst2(h2) > dist * dist)
+					{
+						h2.sub(rp);
+						h2.nor();
+						h2.scl(dist);
+						h2.add(rp);
+					}
+					shape.triangle(rp.x, rp.y, h1.x, h1.y, h2.x, h2.y);
+					dist -= LIGHT_RANGE / 10.0f;
+				}
+			}
 			//shape.line(rp.x, rp.y, v1.x, v1.y);
 			h = i;
 		}
 		shape.end();
+		Gdx.gl.glDisable(GL30.GL_BLEND);
 		transform.setToRotationRad(angle);
 		batch.begin();
 		batch.draw(textureRegion, rp.x - 32, rp.y - 64, 32, 64, 64, 96, 1, 1, (float)Math.toDegrees(angle) + 90);

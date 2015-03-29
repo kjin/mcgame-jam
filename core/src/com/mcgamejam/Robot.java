@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public abstract class Robot implements PhysicalGameObject {
+public abstract class Robot extends PhysicalGameObject {
 	protected Vector2 position;
 	protected Vector2 size; // temp - we'll remove this when we have the actual texture
 	protected boolean inLight = false;

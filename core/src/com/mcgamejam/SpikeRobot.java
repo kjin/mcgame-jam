@@ -13,7 +13,7 @@ public class SpikeRobot extends Robot {
 	protected SpikeRobot(float x, float y, boolean faceRight) {
 		super(x, y);
 		facingRight = faceRight;
-		texture = new Texture("electrician.png");
+		texture = new Texture("elecwalk.png");
 		textureRegion = new TextureRegion(texture);
 		size = new Vector2(64, 64);
 	}

@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 
-public class Wall implements PhysicalGameObject {
+public class Wall extends PhysicalGameObject {
 	private Texture wallTexture;
 	private TextureRegion wallTextureRegion;
 	private TiledDrawable wallTiledDrawable;
