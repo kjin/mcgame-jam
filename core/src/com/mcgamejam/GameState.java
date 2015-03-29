@@ -2,14 +2,15 @@ package com.mcgamejam;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class GameState {
-	// Initializer
-	private LevelOne levelO;
+	private Vector2 dimensions;
+	private int levelNum;
 	
 	// Models
 	private SpikeRobot spikeBot;
@@ -18,6 +19,9 @@ public class GameState {
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
 	private ArrayList<Light> lights = new ArrayList<Light>();
 	private Exit exit;
+	
+	// Backgrounds
+	private Texture[] backgrounds;
 	
 	// Box2D world
 	private World physicsWorld;
@@ -34,111 +38,44 @@ public class GameState {
 	
 	GameState(Vector2 dimensions)
 	{
+		this.dimensions = dimensions;
+		backgrounds = new Texture[3];
+		for (int i = 0; i < 3; i++)
+		{
+			backgrounds[i] = new Texture("background" + (i + 1) + ".png");
+		}
+		
+		initLevel(0);
+	}
+	
+	void initLevel(int levelNum) {
+		this.levelNum = levelNum;
+		Level level;
+		if (levelNum == 1)
+		{
+			level = new LevelTwo();
+		}
+		else if (levelNum == 2)
+		{
+			level = new LevelThree();
+		}
+		else
+		{
+			level = new LevelOne();
+		}
 		// init things here
-		levelO = new LevelOne();
-		stairBot = levelO.getStairRobot();
-		spikeBot = levelO.getSpikeRobot();
-		walls.addAll(levelO.getWalls());
+		stairBot = level.getStairRobot();
+		spikeBot = level.getSpikeRobot();
+		walls.addAll(level.getWalls());
 		// add walls on all sides
 		walls.add(new Wall(null, new Vector2(-10, 0), 10, (int)dimensions.y));
 		walls.add(new Wall(null, new Vector2(dimensions.x, 0), 10, (int)dimensions.y));
 		walls.add(new Wall(null, new Vector2(0, -10), (int)dimensions.x, 10));
 		walls.add(new Wall(null, new Vector2(0, dimensions.y), (int)dimensions.x, 10));
-		obstacles.addAll(levelO.getObstacles());
-		lights.addAll(levelO.getLights());
-		exit = levelO.getExit();
-		
-		initializePhysics();	
-	}
-	
-	void update()
-	{
-		// Put your update logic here.
-		// This method is called every frame.
-		physicsWorld.step(DELTA_TIME, 10, 8);
-		
-		spikeBot.update(this);
-		//update the stairBot
-		stairBot.update(this);
-		
-		//update environment
-		for (Wall wall : walls)
-		{
-			wall.update(this);
-		}
-		for (Obstacle obstacle : obstacles)
-		{
-			obstacle.update(this);
-		}
-		for (Light light : lights)
-		{
-			light.update(this);
-		}
-		exit.update(this);
-		
-		//check for collision
-		
-		
-		gameTime += DELTA_TIME;
-	}
-	
-	void changeLevels(int level) {
-		if(level == 1) {
-			LevelTwo level2 = new LevelTwo();
-			stairBot = level2.getStairRobot();
-			spikeBot = level2.getSpikeRobot();
-			walls.addAll(level2.getWalls());
-			obstacles.addAll(level2.getObstacles());
-			exit = level2.getExit();
-		}
-		else {
-			LevelThree level3 = new LevelThree();
-			stairBot = level3.getStairRobot();
-			spikeBot = level3.getSpikeRobot();
-			walls.addAll(level3.getWalls());
-			obstacles.addAll(level3.getObstacles());
-			exit = level3.getExit();
-		}
-
-		
+		obstacles.addAll(level.getObstacles());
+		lights.addAll(level.getLights());
+		exit = level.getExit();
 		initializePhysics();
-	}
-	
-	void render(SpriteBatch batch)
-	{
-		// Put your rendering logic here.
-		// This method is called every frame.
-		batch.end();
-		for (Light light : lights)
-		{
-			light.render(batch);
-		}
-		batch.begin();
-		for(Wall wall: walls) {
-			wall.render(batch);
-		}
-		for(Obstacle obstacle: obstacles)
-		{
-			obstacle.render(batch);
-		}
-		spikeBot.render(batch);
-		stairBot.render(batch);
-		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
-	}
-	
-	float getGameTime()
-	{
-		return gameTime;
-	}
-	
-	public ArrayList<Wall> getWalls()
-	{
-		return walls;
-	}
-	
-	public ArrayList<Light> getLight()
-	{
-		return lights;
 	}
 	
 	private void initializePhysics()
@@ -160,5 +97,75 @@ public class GameState {
 			light.initializePhysics(physicsWorld);
 		}
 		exit.initializePhysics(physicsWorld);
+	}
+	
+	void update()
+	{
+		physicsWorld.step(DELTA_TIME, 10, 8);
+		
+		spikeBot.update(this);
+		//update the stairBot
+		stairBot.update(this);
+		
+		//update environment
+		for (Wall wall : walls)
+		{
+			wall.update(this);
+		}
+		for (Obstacle obstacle : obstacles)
+		{
+			obstacle.update(this);
+		}
+		for (Light light : lights)
+		{
+			light.update(this);
+		}
+		exit.update(this);
+		
+		gameTime += DELTA_TIME;
+	}
+	
+	void render(SpriteBatch batch)
+	{
+		// Draw background.
+		batch.draw(backgrounds[levelNum], 0, 0);
+		
+		// This method is called every frame.
+		for(Wall wall: walls) {
+			wall.render(batch);
+		}
+		for(Obstacle obstacle: obstacles)
+		{
+			obstacle.render(batch);
+		}
+		for (Light light : lights)
+		{
+			light.render(batch);
+		}
+		spikeBot.render(batch);
+		stairBot.render(batch);
+		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
+	}
+	
+	//Getters//
+	
+	public float getGameTime()
+	{
+		return gameTime;
+	}
+	
+	public ArrayList<Wall> getWalls()
+	{
+		return walls;
+	}
+	
+	public ArrayList<Light> getLight()
+	{
+		return lights;
+	}
+	
+	public Vector2 getDimensions()
+	{
+		return dimensions;
 	}
 }

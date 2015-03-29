@@ -193,9 +193,9 @@ public class Light implements PhysicalGameObject {
 		// update position
 		if (Gdx.input.justTouched())
 		{
-			position.set(Gdx.input.getX(), 720 - Gdx.input.getY());
+			position.set(Gdx.input.getX(), gameState.getDimensions().y - Gdx.input.getY());
 		}
-		direction.set(Gdx.input.getX() - position.x, 720 - Gdx.input.getY() - position.y);
+		direction.set(Gdx.input.getX() - position.x, gameState.getDimensions().y - Gdx.input.getY() - position.y);
 		angle = (float)Math.atan2(direction.y, direction.x);
 		
 		ArrayList<Wall> walls = gameState.getWalls();
@@ -208,10 +208,6 @@ public class Light implements PhysicalGameObject {
 			vertices[1] = new Vector2(wall.getX() + wall.getWidth(), wall.getY());
 			vertices[2] = new Vector2(wall.getX() + wall.getWidth(), wall.getY() + wall.getHeight());
 			vertices[3] = new Vector2(wall.getX(), wall.getY() + wall.getHeight());
-			System.out.println(vertices[0]);
-			System.out.println(vertices[1]);
-			System.out.println(vertices[2]);
-			System.out.println(vertices[3]);
 			occlusionPolygons.add(vertices);
 			for (int j = 0; j < 12; j++)
 			{
@@ -223,11 +219,12 @@ public class Light implements PhysicalGameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
+		batch.end();
 		shape.begin(ShapeType.Filled);
 		int h = vertexArray.size() - 1;
 		for (int i = 0; i < vertexArray.size(); i++)
 		{
-			shape.setColor(1, 0.8f, 0.2f, 1);
+			shape.setColor(1, 0.8f, 0.2f, 0.5f);
 			Vector3 v1 = vertexArray.get(h);
 			Vector3 v2 = vertexArray.get(i);
 			shape.triangle(rp.x, rp.y, v1.x, v1.y, v2.x, v2.y);
@@ -237,6 +234,7 @@ public class Light implements PhysicalGameObject {
 			h = i;
 		}
 		shape.end();
+		batch.begin();
 	}
 
 }
