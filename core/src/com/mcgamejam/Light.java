@@ -56,7 +56,7 @@ public class Light implements PhysicalGameObject {
 		return t1Min;
 	}
 	
-	private static boolean triangleContains(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 p)
+	private static boolean triangleContains(Vector2 v0, Vector3 v1, Vector3 v2, Vector2 p)
 	{
 		float iDet = 1 / ((v1.y - v2.y) * (v0.x - v2.x) + (v2.x - v1.x) * (v0.y - v2.y));
 		float a = ((v1.y - v2.y) * (p.x - v2.x) + (v2.x - v1.x) * (p.y - v2.y)) * iDet;
@@ -169,16 +169,18 @@ public class Light implements PhysicalGameObject {
 
 	boolean contains(Vector2 point)
 	{
-		/*for (int i = 0; i < triangleArrayCount; i++)
+		int h = vertexArray.size() - 1;
+		for (int i = 0; i < vertexArray.size(); i++)
 		{
-			const Vec2& v0 = vertices[indices[3 * i]];
-			const Vec2& v1 = vertices[indices[3 * i + 1]];
-			const Vec2& v2 = vertices[indices[3 * i + 2]];
-			if (triangleContains(v0, v1, v2, point))
+			Vector3 v1 = vertexArray.get(h);
+			Vector3 v2 = vertexArray.get(i);
+			shape.triangle(rp.x, rp.y, v1.x, v1.y, v2.x, v2.y);
+			if (triangleContains(rp, v1, v2, point))
 			{
 				return true;
 			}
-		}*/
+			h = i;
+		}
 		return false;
 	}
 
