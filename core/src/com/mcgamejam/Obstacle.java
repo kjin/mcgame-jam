@@ -12,4 +12,8 @@ public class Obstacle extends Wall {
 	public boolean isDeadly() {
 		return true;
 	}
+	
+	public void turnOff() {
+		body.setActive(false);
+	}
 }

@@ -8,21 +8,21 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Robot implements PhysicalGameObject {
-	private Texture robotTexture;
-	private Vector2 position;
-	private Vector2 size = new Vector2(10, 20); // temp - we'll remove this when we have the actual texture
+	protected Texture robotTexture;
+	protected Vector2 position;
+	protected Vector2 size = new Vector2(10, 20); // temp - we'll remove this when we have the actual texture
 	
 	// Body that you can apply forces to and whatnot
-	private Body body;
+	protected Body body;
 	
-	Robot(Vector2 pos)
+	protected Robot(Vector2 pos)
 	{
-		robotTexture = new Texture("badlogic.jpg");
+		robotTexture = new Texture("electrician.png");
 		position = new Vector2();
 		position.set(pos);
 	}
 	
-	Robot(float x, float y)
+	protected Robot(float x, float y)
 	{
 		this(new Vector2(x, y));
 	}
@@ -55,5 +55,10 @@ public class Robot implements PhysicalGameObject {
 	public void render(SpriteBatch batch)
 	{
 		batch.draw(robotTexture, position.x, position.y, size.x, size.y);
+	}
+	
+	public void render(SpriteBatch batch, Texture rTexture)
+	{
+		batch.draw(rTexture, position.x, position.y, size.x, size.y);
 	}
 }

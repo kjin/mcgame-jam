@@ -12,7 +12,8 @@ public class GameState {
 	private LevelOne levelO;
 	
 	// Models
-	private Robot robot;
+	private SpikeRobot spikeBot;
+	private StaircaseRobot stairBot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
 	private ArrayList<Light> lights = new ArrayList<Light>();
@@ -35,7 +36,8 @@ public class GameState {
 	{
 		// init things here
 		levelO = new LevelOne();
-		robot = levelO.getRobot();
+		stairBot = levelO.getStairRobot();
+		spikeBot = levelO.getSpikeRobot();
 		walls.addAll(levelO.getWalls());
 		// add walls on all sides
 		walls.add(new Wall(null, new Vector2(-10, 0), 10, (int)dimensions.y));
@@ -46,8 +48,7 @@ public class GameState {
 		lights.addAll(levelO.getLights());
 		exit = levelO.getExit();
 		
-		initializePhysics();
-		
+		initializePhysics();	
 	}
 	
 	void update()
@@ -56,7 +57,19 @@ public class GameState {
 		// This method is called every frame.
 		physicsWorld.step(DELTA_TIME, 10, 8);
 		
-		robot.update(this);
+		spikeBot.update(this);
+		//update the stairBot
+		if(stairBot.stairTimeStart == 0 && stairBot.inLight) {
+			stairBot.ability();
+			stairBot.stairTimeStart = gameTime;
+			stairBot.inLight = false;
+		}
+		else if((gameTime - stairBot.stairTimeStart) >= 180 && stairBot.isStairs) {
+			stairBot.changeBack();
+		}
+		stairBot.update(this);
+		
+		//update environment
 		for (Wall wall : walls)
 		{
 			wall.update(this);
@@ -71,15 +84,39 @@ public class GameState {
 		}
 		exit.update(this);
 		
+		//check for collision
+		
+		
 		gameTime += DELTA_TIME;
+	}
+	
+	void changeLevels(int level) {
+		if(level == 1) {
+			LevelTwo level2 = new LevelTwo();
+			stairBot = level2.getStairRobot();
+			spikeBot = level2.getSpikeRobot();
+			walls.addAll(level2.getWalls());
+			obstacles.addAll(level2.getObstacles());
+			exit = level2.getExit();
+		}
+		else {
+			LevelThree level3 = new LevelThree();
+			stairBot = level3.getStairRobot();
+			spikeBot = level3.getSpikeRobot();
+			walls.addAll(level3.getWalls());
+			obstacles.addAll(level3.getObstacles());
+			exit = level3.getExit();
+		}
+
+		
+		initializePhysics();
 	}
 	
 	void render(SpriteBatch batch)
 	{
 		// Put your rendering logic here.
 		// This method is called every frame.
-		for(Wall wall: walls)
-		{
+		for(Wall wall: walls) {
 			wall.render(batch);
 		}
 		for(Obstacle obstacle: obstacles)
@@ -90,7 +127,13 @@ public class GameState {
 		{
 			light.render(batch);
 		}
-		robot.render(batch);
+		spikeBot.render(batch);
+		if(stairBot.isStairs) {
+			stairBot.render(batch, stairBot.stairTexture);
+		}
+		else {
+			stairBot.render(batch);
+		}
 		batch.draw(exit.getTexture(), exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
 	}
 	
@@ -108,7 +151,8 @@ public class GameState {
 	{
 		Box2D.init();
 		physicsWorld = new World(GRAVITY_VECTOR, false);
-		robot.initializePhysics(physicsWorld);
+		spikeBot.initializePhysics(physicsWorld);
+		stairBot.initializePhysics(physicsWorld);
 		for (Wall wall : walls)
 		{
 			wall.initializePhysics(physicsWorld);

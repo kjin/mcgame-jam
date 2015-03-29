@@ -16,7 +16,7 @@ public class Wall implements PhysicalGameObject {
 	private int width;
 	
 	// Body that you can apply forces to and whatnot
-	private Body body;
+	protected Body body;
 	
 	public Wall(String texture, Vector2 pos, int height, int width) {
 		if (texture != null)

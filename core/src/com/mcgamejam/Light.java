@@ -228,7 +228,7 @@ public class Light implements PhysicalGameObject {
 		int h = vertexArray.size() - 1;
 		for (int i = 0; i < vertexArray.size(); i++)
 		{
-			shape.setColor(1, 1, 0.5f, 1);
+			shape.setColor(1, 0.8f, 0.2f, 1);
 			Vector3 v1 = vertexArray.get(h);
 			Vector3 v2 = vertexArray.get(i);
 			shape.triangle(rp.x, rp.y, v1.x, v1.y, v2.x, v2.y);

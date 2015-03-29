@@ -1,18 +1,18 @@
 package com.mcgamejam;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class LevelOne {
+public class LevelThree {
 	private StaircaseRobot stairbot;
 	private SpikeRobot spikebot;
 	private ArrayList<Wall> walls = new ArrayList<Wall>();
 	private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-	private ArrayList<Light> lights = new ArrayList<Light>();
 	private Exit exit;
 	
-	public LevelOne() {
+	public LevelThree() {
 		stairbot = new StaircaseRobot(400, 400, true);
 		spikebot = new SpikeRobot(100, 150, true);
 		
@@ -25,35 +25,34 @@ public class LevelOne {
 		walls.add(tester3);
 		walls.add(tester4);
 		
-		lights.add(new Light());
 		Obstacle test = new Obstacle("Platform.png", new Vector2(45, 15), 10, 20);
 		obstacles.add(test);
 
-		exit = new Exit("badlogic.jpg", new Vector2(10, 15), 30, 30);
-	}
-	
-	public StaircaseRobot getStairRobot() {
-		return stairbot;
-	}
-	
-	public SpikeRobot getSpikeRobot() {
-		return spikebot;
-	}
-	
-	public ArrayList<Wall> getWalls() {
-		return walls;
-	}
-	
-	public ArrayList<Obstacle> getObstacles() {
-		return obstacles;
-	}
-	
-	public ArrayList<Light> getLights() {
-		return lights;
-	}
-	
-	public Exit getExit() {
-		return exit;
+		exit = new Exit("badlogic.png", new Vector2(10, 15), 30, 30);
 	}
 
+	public StaircaseRobot getStairRobot() {
+		// TODO Auto-generated method stub
+		return stairbot;
+	}
+
+	public SpikeRobot getSpikeRobot() {
+		// TODO Auto-generated method stub
+		return spikebot;
+	}
+
+	public ArrayList<Wall> getWalls() {
+		// TODO Auto-generated method stub
+		return walls;
+	}
+
+	public ArrayList<Obstacle> getObstacles() {
+		// TODO Auto-generated method stub
+		return obstacles;
+	}
+
+	public Exit getExit() {
+		// TODO Auto-generated method stub
+		return exit;
+	}
 }
