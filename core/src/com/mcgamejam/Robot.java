@@ -5,14 +5,20 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Robot implements PhysicalGameObject {
-	protected Texture robotTexture;
 	protected Vector2 position;
-	protected Vector2 size = new Vector2(100, 100); // temp - we'll remove this when we have the actual texture
+	protected Vector2 size; // temp - we'll remove this when we have the actual texture
 	protected boolean inLight = false;
+	protected boolean facingRight = true;
+	
+	//animation
+	protected int frame = 0;
+	protected int counter = 0;
+	protected int frameChangeFrequency = 6;
 	
 	// Body that you can apply forces to and whatnot
 	protected Body body;
