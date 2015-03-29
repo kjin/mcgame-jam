@@ -116,16 +116,18 @@ public class GameState {
 	{
 		// Put your rendering logic here.
 		// This method is called every frame.
+		batch.end();
+		for (Light light : lights)
+		{
+			light.render(batch);
+		}
+		batch.begin();
 		for(Wall wall: walls) {
 			wall.render(batch);
 		}
 		for(Obstacle obstacle: obstacles)
 		{
 			obstacle.render(batch);
-		}
-		for (Light light : lights)
-		{
-			light.render(batch);
 		}
 		spikeBot.render(batch);
 		if(stairBot.isStairs) {
